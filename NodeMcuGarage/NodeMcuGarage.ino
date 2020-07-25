@@ -56,9 +56,13 @@ void printHTML(WiFiClient client) {
   client.println("<html>");
 
   client.println("<br><br>");
-  client.println("<a href=\"/flip-motor\"\"><button>Flip MOTOR </button></a>");
+  client.print("<a href=\"/flip-motor\"\"><button>Flip MOTOR </button></a> <span>Current status: ");
+  client.print(!digitalRead(relayMotor));
+  client.println("</span>");
   client.println("<br><br>");
-  client.println("<a href=\"/flip-light\"\"><button>Flip LIGHT </button></a>");
+  client.println("<a href=\"/flip-light\"\"><button>Flip LIGHT </button></a> <span>Current status: ");
+  client.print(!digitalRead(relayLight));
+  client.println("</span>");
   client.println("</html>");
 
 }
