@@ -68,7 +68,7 @@ void printHTML(WiFiClient client) {
 }
 
 void setupWifi(){
-  IPAddress ip(192, 168, 0, 99);
+  IPAddress ip(192, 168, 0, 157);
   IPAddress gateway(192, 168, 0, 1);
   IPAddress subnet(255, 255, 255, 0);
   // if need internet access
