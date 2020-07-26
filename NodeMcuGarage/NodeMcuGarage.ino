@@ -52,7 +52,9 @@ void setup(void) {
   server.on("/", HTTP_GET, handleRoot);
   server.on("/pump", HTTP_POST, handlePump);
   server.on("/light", HTTP_POST, handleLight);
-  server.onNotFound(handleNotFound);
+  server.onNotFound([](){
+    server.send(404, "text/plain", "404: Not found");
+  });
 
   server.begin();
   Serial.println("HTTP server started");
@@ -80,8 +82,4 @@ void handleLight() {
   digitalWrite(pinLight, !digitalRead(pinLight));
   server.sendHeader("Location", "/");
   server.send(303);
-}
-
-void handleNotFound() {
-  server.send(404, "text/plain", "404: Not found");
 }
