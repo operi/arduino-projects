@@ -32,7 +32,6 @@ void setup(void) {
   wifiMulti.addAP(ssid, password);
 
   Serial.println("Connecting ...");
-  int i = 0;
   // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
   while (wifiMulti.run() != WL_CONNECTED) {
     delay(250);
