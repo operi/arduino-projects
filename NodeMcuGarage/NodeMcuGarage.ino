@@ -16,10 +16,9 @@ void handlePump();
 void handleLight();
 void handleNotFound();
 
-String styles = "<style>form{text-align:center;height:200px;width:100%} input{height:50%;width:50%;font-size:50px}</style>";
-String lineBreak = "<br><br>";
-String formPump = "<form action=\"/pump\" method=\"POST\"><input type=\"submit\" value=\"Toggle Pump\"></form>";
-String formLight = "<form action=\"/light\" method=\"POST\"><input type=\"submit\" value=\"Toggle Light\"></form>";
+String styles = "<style>body{padding-top:3rem;display:grid;place-items:center;grid-gap:3rem;}form{height:8rem;width:50%;}button{width:100%;height:100%;font-size:3rem;border-radius:12px;}</style>";
+String formPump = "<form action=\"/pump\"><button type=\"submit\" formmethod=\"post\">Toggle Pump</button></form>";
+String formLight = "<form action=\"/light\"><button type=\"submit\" formmethod=\"post\">Toggle Light</button></form>";
 
 void setup(void) {
   Serial.begin(115200);
@@ -68,7 +67,7 @@ void handleRoot() {
 }
 
 String getHTML() {
-  return styles + lineBreak + formPump + formLight;
+  return styles + "<body>" + formPump + formLight + "</body>";
 }
 
 void handlePump() {
