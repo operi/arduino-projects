@@ -7,6 +7,7 @@
 #include "WifiKeys.h"
 
 ESP8266WiFiMulti wifiMulti;
+File fsUploadFile;
 ESP8266WebServer server(80);
 
 const int pinPump = 5;
@@ -14,6 +15,7 @@ const int pinLight = 4;
 
 String getContentType(String filename);
 bool handleFileRead(String path);
+void handleFileUpload();
 
 void setup(void) {
   Serial.begin(115200);
@@ -48,6 +50,15 @@ void setup(void) {
 
   server.on("/pump", HTTP_POST, handlePump);
   server.on("/light", HTTP_POST, handleLight);
+  server.on("/upload", HTTP_GET, []() {
+    if (!handleFileRead("/upload.html"))
+      server.send(404, "text/plain", "404: Not Found");
+  });
+
+  server.on("/upload", HTTP_POST,
+    [](){ server.send(200); },
+    handleFileUpload
+  );
   server.onNotFound([]() {
     if (!handleFileRead(server.uri()))
       server.send(404, "text/plain", "404: Not Found");
@@ -98,4 +109,27 @@ void handleLight() {
   digitalWrite(pinLight, !digitalRead(pinLight));
   server.sendHeader("Location", "/");
   server.send(303);
+}
+
+void handleFileUpload(){
+  HTTPUpload& upload = server.upload();
+  if(upload.status == UPLOAD_FILE_START){
+    String filename = upload.filename;
+    if(!filename.startsWith("/")) filename = "/"+filename;
+    Serial.print("handleFileUpload Name: "); Serial.println(filename);
+    fsUploadFile = SPIFFS.open(filename, "w");
+    filename = String();
+  } else if(upload.status == UPLOAD_FILE_WRITE){
+    if(fsUploadFile)
+      fsUploadFile.write(upload.buf, upload.currentSize);
+  } else if(upload.status == UPLOAD_FILE_END){
+    if(fsUploadFile) {
+      fsUploadFile.close();
+      Serial.print("handleFileUpload Size: "); Serial.println(upload.totalSize);
+      server.sendHeader("Location","/index.html");
+      server.send(303);
+    } else {
+      server.send(500, "text/plain", "500: couldn't create file");
+    }
+  }
 }
