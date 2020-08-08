@@ -40,7 +40,7 @@ void setup(void) {
   Serial.println(WiFi.localIP());
 
   // Start the mDNS responder
-  if (MDNS.begin("arduino")) {
+  if (MDNS.begin("garage")) {
     Serial.println("mDNS responder started");
   } else {
     Serial.println("Error setting up MDNS responder!");
@@ -70,6 +70,7 @@ void setup(void) {
 
 void loop(void) {
   server.handleClient();
+  MDNS.update();
 }
 
 String getContentType(String filename){
