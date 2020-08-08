@@ -8,8 +8,8 @@
 ESP8266WiFiMulti wifiMulti;
 ESP8266WebServer server(80);
 
-const int pinPump = D1;
-const int pinLight = D2;
+const int pinPump = 5;
+const int pinLight = 4;
 
 void handleRoot();
 void handlePump();
