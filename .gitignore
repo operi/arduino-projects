@@ -1,2 +1,4 @@
 libraries
 **/WifiKeys.h
+tools
+*.gz
