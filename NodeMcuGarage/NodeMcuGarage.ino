@@ -25,7 +25,9 @@ void setup(void) {
   pinMode(pinPump, OUTPUT);
   pinMode(pinLight, OUTPUT);
 
-  wifiMulti.addAP(ssid, password);
+  wifiMulti.addAP(ssid1, password1);
+  wifiMulti.addAP(ssid2, password2);
+
 
   Serial.println("Connecting ...");
   // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
