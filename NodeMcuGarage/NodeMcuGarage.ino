@@ -1,15 +1,16 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
-#include <ESP8266WiFiMulti.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 #include <ArduinoOTA.h>
 #include <FS.h>
 #include "WifiKeys.h"
 
-ESP8266WiFiMulti wifiMulti;
 File fsUploadFile;
 ESP8266WebServer server(80);
+IPAddress ip(192,168,0,200);
+IPAddress gateway(192,168,0,1);
+IPAddress subnet(255,255,255,0);
 
 // use custom values. See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
 const int ON = !HIGH;
@@ -32,13 +33,13 @@ void setup(void) {
   digitalWrite(pinPump, OFF);
   digitalWrite(pinLight, OFF);
 
-  wifiMulti.addAP(ssid1, password1);
-  wifiMulti.addAP(ssid2, password2);
+  WiFi.config(ip, gateway, subnet);
+  WiFi.begin(ssid1, password1);
 
 
   Serial.println("Connecting ...");
   // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
-  while (wifiMulti.run() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED) {
     delay(250);
     Serial.print('.');
   }
