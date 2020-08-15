@@ -3,12 +3,17 @@
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
+#include <ArduinoOTA.h>
 #include <FS.h>
 #include "WifiKeys.h"
 
 ESP8266WiFiMulti wifiMulti;
 File fsUploadFile;
 ESP8266WebServer server(80);
+
+# use custom values. See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
+const int ON = !HIGH;
+const int OFF = !LOW;
 
 const int pinPump = 5;
 const int pinLight = 4;
@@ -24,8 +29,12 @@ void setup(void) {
 
   pinMode(pinPump, OUTPUT);
   pinMode(pinLight, OUTPUT);
+  digitalWrite(pinPump, OFF);
+  digitalWrite(pinLight, OFF);
 
-  wifiMulti.addAP(ssid, password);
+  wifiMulti.addAP(ssid1, password1);
+  wifiMulti.addAP(ssid2, password2);
+
 
   Serial.println("Connecting ...");
   // Wait for the Wi-Fi to connect: scan for Wi-Fi networks, and connect to the strongest of the networks above
@@ -45,6 +54,8 @@ void setup(void) {
   } else {
     Serial.println("Error setting up MDNS responder!");
   }
+
+  setupOTA();
   
   SPIFFS.begin();
 
@@ -69,8 +80,33 @@ void setup(void) {
 }
 
 void loop(void) {
+  ArduinoOTA.handle();
   server.handleClient();
   MDNS.update();
+}
+
+void setupOTA() {
+  ArduinoOTA.setHostname("garage");
+  ArduinoOTA.setPassword(OTA_password);
+  ArduinoOTA.onStart([]() {
+    Serial.println("Start");
+  });
+  ArduinoOTA.onEnd([]() {
+    Serial.println("\nEnd");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+    else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+    else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+    else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+    else if (error == OTA_END_ERROR) Serial.println("End Failed");
+  });
+  ArduinoOTA.begin();
+  Serial.println("OTA ready");
 }
 
 String getContentType(String filename){
