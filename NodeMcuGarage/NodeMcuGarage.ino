@@ -11,7 +11,7 @@ ESP8266WiFiMulti wifiMulti;
 File fsUploadFile;
 ESP8266WebServer server(80);
 
-# use custom values. See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
+// use custom values. See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
 const int ON = !HIGH;
 const int OFF = !LOW;
 
