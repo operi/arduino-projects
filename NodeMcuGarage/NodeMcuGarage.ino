@@ -33,6 +33,56 @@ void setup(void) {
   digitalWrite(pinPump, OFF);
   digitalWrite(pinLight, OFF);
 
+  setupWIFI();
+
+  setupMDNS();
+
+  setupOTA();
+
+  SPIFFS.begin();
+
+  setupServer();
+}
+
+void loop(void) {
+  ArduinoOTA.handle();
+  server.handleClient();
+  MDNS.update();
+}
+
+void setupServer() {
+  server.on("/pump", HTTP_POST, handlePump);
+  server.on("/light", HTTP_POST, handleLight);
+  server.on("/upload", HTTP_GET, []() {
+    if (!handleFileRead("/upload.html"))
+      server.send(404, "text/plain", "404: Not Found");
+  });
+
+  server.on("/upload", HTTP_POST,
+  []() {
+    server.send(200);
+  },
+  handleFileUpload);
+  
+  server.onNotFound([]() {
+    if (!handleFileRead(server.uri()))
+      server.send(404, "text/plain", "404: Not Found");
+  });
+
+  server.begin();
+  Serial.println("HTTP server started");
+}
+
+void setupMDNS() {
+  // Start the mDNS responder
+  if (MDNS.begin("garage")) {
+    Serial.println("mDNS responder started");
+  } else {
+    Serial.println("Error setting up MDNS responder!");
+  }
+}
+
+void setupWIFI() {
   WiFi.config(ip, gateway, subnet);
   WiFi.begin(ssid1, password1);
 
@@ -48,44 +98,6 @@ void setup(void) {
   Serial.println(WiFi.SSID());
   Serial.print("IP address:\t");
   Serial.println(WiFi.localIP());
-
-  // Start the mDNS responder
-  if (MDNS.begin("garage")) {
-    Serial.println("mDNS responder started");
-  } else {
-    Serial.println("Error setting up MDNS responder!");
-  }
-
-  setupOTA();
-
-  SPIFFS.begin();
-
-  server.on("/pump", HTTP_POST, handlePump);
-  server.on("/light", HTTP_POST, handleLight);
-  server.on("/upload", HTTP_GET, []() {
-    if (!handleFileRead("/upload.html"))
-      server.send(404, "text/plain", "404: Not Found");
-  });
-
-  server.on("/upload", HTTP_POST,
-  []() {
-    server.send(200);
-  },
-  handleFileUpload
-           );
-  server.onNotFound([]() {
-    if (!handleFileRead(server.uri()))
-      server.send(404, "text/plain", "404: Not Found");
-  });
-
-  server.begin();
-  Serial.println("HTTP server started");
-}
-
-void loop(void) {
-  ArduinoOTA.handle();
-  server.handleClient();
-  MDNS.update();
 }
 
 void setupOTA() {
