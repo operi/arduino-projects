@@ -1,38 +1,4 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Peri's project</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <script type="text/javascript" src="jquery-3.5.1.min.map.js"></script>
-        <script type="text/javascript">
-        $(document).ready(function(){
-            $("input[type=file]").change(function(e) {
-                $in = $(this);
-                $in.next().html($in.val().split('\\').slice(-1)[0]);
-            });
-
-            $(".browser-button").click(function() {
-                var fileName = $("#browser-file").val();
-                if (fileName) {
-                    alert(fileName + " can be uploaded.");
-                }
-                else {
-                    alert("Please select a file to upload");
-                }   
-            });
-        });
-        </script>
-    </head>
-    <body>
-        <form method="post" enctype="multipart/form-data" class="upload-container">
-            <div class="browser">
-                <input type="button" class="browser-button" value="Browse" />
-                <input type="file" name="upload" id="browser-file" />
-                <span class="file-name">Select file...</span>
-            </div>
-
-            <input class="button" type="submit" value="Upload">
-        </form>
-    </body>
-</html>
-
+<form method="post" enctype="multipart/form-data">
+  <input type="file" name="name">
+  <input class="button" type="submit" value="Upload">
+</form>
