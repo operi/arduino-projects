@@ -71,11 +71,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
         webSocket.sendTXT(num, getStatus());
       }
       break;
-    case WStype_TEXT:                     // if new text data is received
-      Serial.println("Received text");
-      if (payload[0] == 'p') {
+    case WStype_TEXT:
+    String payload_str = String((char*) payload);
+      if (payload_str == "pump") {
         handlePump();
-      } else if (payload[0] == 'l') {
+      } else if (payload_str == "light") {
         handleLight();
       }
       webSocket.sendTXT(num, getStatus());
