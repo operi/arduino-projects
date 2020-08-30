@@ -3,14 +3,19 @@
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 #include <ArduinoOTA.h>
+#include <WebSocketsServer.h>
+#include <ArduinoJson.h>
 #include <FS.h>
 #include "Keys.h"
 
 File fsUploadFile;
 ESP8266WebServer server(80);
+WebSocketsServer webSocket(81);
 IPAddress ip(192, 168, 0, 200);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
+StaticJsonDocument<128> jsonBuffer;
+
 
 // use custom values. See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
 const int ON = !HIGH;
@@ -18,10 +23,6 @@ const int OFF = !LOW;
 
 const int pinPump = 5;
 const int pinLight = 4;
-
-String getContentType(String filename);
-bool handleFileRead(String path);
-void handleFileUpload();
 
 void setup(void) {
   Serial.begin(115200);
@@ -42,12 +43,61 @@ void setup(void) {
   SPIFFS.begin();
 
   setupServer();
+
+  setupWS();
 }
 
 void loop(void) {
+  webSocket.loop();
   ArduinoOTA.handle();
   server.handleClient();
   MDNS.update();
+}
+
+void setupWS() {
+  webSocket.begin();
+  webSocket.onEvent(webSocketEvent);
+  Serial.println("WebSocket server started.");
+}
+
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) { // When a WebSocket message is received
+  switch (type) {
+    case WStype_DISCONNECTED:             // if the websocket is disconnected
+      Serial.printf("[%u] Disconnected!\n", num);
+      break;
+    case WStype_CONNECTED: {              // if a new websocket connection is established
+        IPAddress ip = webSocket.remoteIP(num);
+        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+        webSocket.sendTXT(num, getStatus());
+      }
+      break;
+    case WStype_TEXT:                     // if new text data is received
+      Serial.println("Received text");
+      if (payload[0] == 'p') {
+        handlePump();
+      } else if (payload[0] == 'l') {
+        handleLight();
+      }
+      webSocket.sendTXT(num, getStatus());
+      break;
+  }
+}
+
+char * getStatus() {
+  jsonBuffer["pump"] = getStringRead(!digitalRead(pinPump));
+  jsonBuffer["l"] = getStringRead(!digitalRead(pinLight));
+  char response[128];
+  serializeJson(jsonBuffer, response, sizeof(response));
+  return response;
+}
+
+bool getStringRead(int reading) {
+  if (reading == 1) {
+    return true;
+  }
+  if (reading == 0) {
+    return false;  
+  }
 }
 
 void setupServer() {
@@ -102,7 +152,6 @@ void setupWIFI() {
 
 void setupOTA() {
   ArduinoOTA.setHostname("garage");
-  ArduinoOTA.setPassword(OTA_password);
   ArduinoOTA.onStart([]() {
     Serial.println("Start");
   });
@@ -153,14 +202,10 @@ bool handleFileRead(String path) {
 
 void handlePump() {
   digitalWrite(pinPump, !digitalRead(pinPump));
-  server.sendHeader("Location", "/");
-  server.send(303);
 }
 
 void handleLight() {
   digitalWrite(pinLight, !digitalRead(pinLight));
-  server.sendHeader("Location", "/");
-  server.send(303);
 }
 
 void handleFileUpload() {
