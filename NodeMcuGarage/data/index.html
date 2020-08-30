@@ -3,23 +3,20 @@
     <head>
         <title>Peri's project</title>
         <link rel="stylesheet" type="text/css" href="style.css">
+        <script type="text/javascript" src="app.js"></script>
     </head>
     <body>
         <div class="container">
-            <form action="/pump">
-                <div class="text">Pump</div>
-                <label class="switch">
-                    <input type="checkbox" formmethod="POST">
-                    <span class="slider"></span>
-                </label>
-            </form>
-            <form action="/light">
-                <div class="text">Light</div>
-                <label class="switch">
-                    <input type="checkbox" formmethod="POST">
-                    <span class="slider"></span>
-                </label>
-            </form>
+			<div class="text">Pump</div>
+			<label class="switch">
+				<input type="checkbox" onclick="flipPump()">
+				<span class="slider"></span>
+			</label>
+            <div class="text">Light</div>
+            <label class="switch">
+                <input type="checkbox" onclick="flipLight()">
+                <span class="slider"></span>
+            </label>
         </div>
     </body>
 </html>
