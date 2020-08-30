@@ -1,4 +1,4 @@
-const ws = new WebSocket('ws://192.168.0.200/');
+const ws = new WebSocket('ws://192.168.0.200:81/');
 ws.onopen = function() {
     console.log('WebSocket Client Connected');
     ws.send("status");
