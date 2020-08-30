@@ -12,7 +12,6 @@ IPAddress ip(192, 168, 0, 200);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
 
-
 // use custom values. See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
 const int ON = !HIGH;
 const int OFF = !LOW;
@@ -58,7 +57,6 @@ void setupServer() {
     if (!handleFileRead("/upload.html"))
       server.send(404, "text/plain", "404: Not Found");
   });
-  server.on("/", HTTP_GET, handleRoot);
 
   server.on("/upload", HTTP_POST,
   []() {
@@ -73,17 +71,6 @@ void setupServer() {
 
   server.begin();
   Serial.println("HTTP server started");
-}
-
-void handleRoot() {
-  server.send(200, "text/html", getHTML());
-}
-
-String getHTML() {
-  String page = "<style>body{padding-top:3rem;display:grid;place-items:center;grid-gap:3rem;}form{height:8rem;width:50%;}button{width:100%;height:100%;font-size:3rem;border-radius:12px;}</style><form action=\"/pump\"><button type=\"submit\" formmethod=\"post\">Toggle Pump</button>Value is: PUMP_VALUE</form><form action=\"/light\"><button type=\"submit\" formmethod=\"post\">Toggle Light</button>Value is: LIGHT_VALUE</form>";
-  page.replace("PUMP_VALUE", (String) !digitalRead(pinPump));
-  page.replace("LIGHT_VALUE", (String) !digitalRead(pinLight));
-  return page;
 }
 
 void setupMDNS() {
