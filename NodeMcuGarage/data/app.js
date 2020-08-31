@@ -5,6 +5,9 @@ ws.onopen = function() {
 };
 ws.onmessage = function(e) {
   console.log("Received: '" + e.data + "'");
+  var response = JSON.parse(e.data);
+  document.getElementById("pump").checked = response.pump;
+  document.getElementById("light").checked = response.light;
 };
 
 function flipPump() {
