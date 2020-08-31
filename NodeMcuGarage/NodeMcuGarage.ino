@@ -14,7 +14,8 @@ WebSocketsServer webSocket(81);
 IPAddress ip(192, 168, 0, 200);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
-StaticJsonDocument<128> jsonBuffer;
+const size_t capacity = JSON_OBJECT_SIZE(2);
+DynamicJsonDocument doc(capacity);
 
 
 // use custom values. See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
@@ -68,7 +69,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
     case WStype_CONNECTED: {              // if a new websocket connection is established
         IPAddress ip = webSocket.remoteIP(num);
         Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-        webSocket.sendTXT(num, getStatus());
+        sendStatus(num);
       }
       break;
     case WStype_TEXT:
@@ -78,17 +79,17 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
       } else if (payload_str == "light") {
         handleLight();
       }
-      webSocket.sendTXT(num, getStatus());
+      sendStatus(num);
       break;
   }
 }
 
-char * getStatus() {
-  jsonBuffer["pump"] = getStringRead(!digitalRead(pinPump));
-  jsonBuffer["l"] = getStringRead(!digitalRead(pinLight));
-  char response[128];
-  serializeJson(jsonBuffer, response, sizeof(response));
-  return response;
+void sendStatus(uint8_t num) {
+  doc["pump"] = getStringRead(!digitalRead(pinPump));
+  doc["light"] = getStringRead(!digitalRead(pinLight));
+  char output[128];
+  int size = serializeJson(doc, output);
+  webSocket.sendTXT(num, output, size);
 }
 
 bool getStringRead(int reading) {
