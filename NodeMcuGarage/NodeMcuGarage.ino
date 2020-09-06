@@ -124,14 +124,6 @@ void setupServer() {
   Serial.println("HTTP server started");
 }
 
-void setupMDNS() {
-  if (MDNS.begin("garage")) {
-    Serial.println("mDNS responder started");
-  } else {
-    Serial.println("Error setting up MDNS responder!");
-  }
-}
-
 void setupWIFI() {
   WiFi.config(ip, gateway, subnet);
   WiFi.begin(ssid1, password1);
