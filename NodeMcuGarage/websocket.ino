@@ -28,8 +28,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 }
 
 void sendStatus(uint8_t num) {
-  doc["pump"] = getStringRead(!digitalRead(pinPump));
-  doc["light"] = getStringRead(!digitalRead(pinLight));
+  doc["pump"] = (bool) !digitalRead(pinPump);
+  doc["light"] = (bool) !digitalRead(pinLight);
   char output[128];
   int size = serializeJson(doc, output);
   webSocket.sendTXT(num, output, size);

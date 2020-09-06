@@ -55,15 +55,6 @@ void loop(void) {
   MDNS.update();
 }
 
-bool getStringRead(int reading) {
-  if (reading == 1) {
-    return true;
-  }
-  if (reading == 0) {
-    return false;  
-  }
-}
-
 void handlePump() {
   digitalWrite(pinPump, !digitalRead(pinPump));
 }
