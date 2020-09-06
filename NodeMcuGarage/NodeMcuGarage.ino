@@ -61,12 +61,12 @@ void setupWS() {
   Serial.println("WebSocket server started.");
 }
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) { // When a WebSocket message is received
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
   switch (type) {
-    case WStype_DISCONNECTED:             // if the websocket is disconnected
+    case WStype_DISCONNECTED:
       Serial.printf("[%u] Disconnected!\n", num);
       break;
-    case WStype_CONNECTED: {              // if a new websocket connection is established
+    case WStype_CONNECTED: {
         IPAddress ip = webSocket.remoteIP(num);
         Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
         sendStatus(num);
@@ -125,7 +125,6 @@ void setupServer() {
 }
 
 void setupMDNS() {
-  // Start the mDNS responder
   if (MDNS.begin("garage")) {
     Serial.println("mDNS responder started");
   } else {
