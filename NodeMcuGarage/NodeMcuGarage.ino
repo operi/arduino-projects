@@ -55,10 +55,18 @@ void loop(void) {
   MDNS.update();
 }
 
+bool getPumpState() {
+  return digitalRead(pinPump);
+}
+
 void handlePump() {
-  digitalWrite(pinPump, !digitalRead(pinPump));
+  digitalWrite(pinPump, !getPumpState());
+}
+
+bool getLightState() {
+  return digitalRead(pinLight);
 }
 
 void handleLight() {
-  digitalWrite(pinLight, !digitalRead(pinLight));
+  digitalWrite(pinLight, !getLightState());
 }
