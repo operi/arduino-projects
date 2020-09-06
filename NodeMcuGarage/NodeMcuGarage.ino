@@ -16,6 +16,7 @@ IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
 const size_t capacity = JSON_OBJECT_SIZE(2);
 DynamicJsonDocument doc(capacity);
+int stopPumpAt = 0;
 
 
 // use custom values. See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
@@ -53,4 +54,7 @@ void loop(void) {
   ArduinoOTA.handle();
   server.handleClient();
   MDNS.update();
+  if (shouldTurnPumpOff()) {
+    handlePump();
+  }
 }

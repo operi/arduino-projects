@@ -28,8 +28,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 }
 
 void sendStatus(uint8_t num) {
-  doc["pump"] = (bool) !digitalRead(pinPump);
-  doc["light"] = (bool) !digitalRead(pinLight);
+  // See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
+  doc["pump"] = !getPumpState();
+  doc["light"] = !getLightState();
   char output[128];
   int size = serializeJson(doc, output);
   webSocket.sendTXT(num, output, size);
