@@ -54,19 +54,3 @@ void loop(void) {
   server.handleClient();
   MDNS.update();
 }
-
-bool getPumpState() {
-  return digitalRead(pinPump);
-}
-
-void handlePump() {
-  digitalWrite(pinPump, !getPumpState());
-}
-
-bool getLightState() {
-  return digitalRead(pinLight);
-}
-
-void handleLight() {
-  digitalWrite(pinLight, !getLightState());
-}
