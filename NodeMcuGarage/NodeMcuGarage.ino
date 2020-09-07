@@ -4,6 +4,7 @@
 #include <ESP8266WebServer.h>
 #include <ArduinoOTA.h>
 #include <WebSocketsServer.h>
+#define ARDUINOJSON_USE_LONG_LONG 1
 #include <ArduinoJson.h>
 #include <FS.h>
 #include "Keys.h"
@@ -14,8 +15,7 @@ WebSocketsServer webSocket(81);
 IPAddress ip(192, 168, 0, 200);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
-const size_t capacity = JSON_OBJECT_SIZE(2);
-DynamicJsonDocument doc(capacity);
+const size_t capacity = JSON_OBJECT_SIZE(1) + 2*JSON_OBJECT_SIZE(2);
 int stopPumpAt = 0;
 
 
