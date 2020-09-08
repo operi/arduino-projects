@@ -28,11 +28,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 }
 
 void sendStatus(uint8_t num) {
+  const size_t capacity = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3);
   DynamicJsonDocument doc(capacity);
   // See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
+  doc["now"] = millis();
   JsonObject light = doc.createNestedObject("light");
-  JsonObject pump = doc.createNestedObject("pump");
   light["state"] = !getLightState();
+  JsonObject pump = doc.createNestedObject("pump");
   pump["state"] = !getPumpState();
   pump["stopPumpAt"] = stopPumpAt;
   char output[128];
