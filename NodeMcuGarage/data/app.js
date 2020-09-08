@@ -7,6 +7,12 @@ ws.onmessage = function(e) {
   var response = JSON.parse(e.data);
   document.getElementById("pump").checked = response.pump.state;
   document.getElementById("light").checked = response.light.state;
+  if (response.pump.stopPumpAt) {
+    var stopAtDate = new Date(Date.now() + (response.pump.stopPumpAt - response.now));
+    var message = "Turns off at: " + stopAtDate.toLocaleTimeString('en-US');
+    document.getElementById("pumpOffAtText").style.display = "inline-flexbox";
+    document.getElementById("pumpOffAtMessage").textContent = message;
+   }
 };
 
 function flipPump() {

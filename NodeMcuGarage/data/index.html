@@ -7,11 +7,16 @@
     </head>
     <body>
         <div class="container">
-			<div class="text">Pump</div>
-			<label class="switch">
-				<input id="pump" type="checkbox" onclick="flipPump()">
-				<span class="slider"></span>
-			</label>
+            <div>
+                <div class="text">Pump</div>
+                <label class="switch">
+                    <input id="pump" type="checkbox" onclick="flipPump()">
+                    <span class="slider"></span>
+                </label>
+                <div id="pumpOffAtText" style="display: inline-flexbox;">
+                    <p id="pumpOffAtMessage" class="small-text"></p>
+                </div>
+            </div>
             <div class="text">Light</div>
             <label class="switch">
                 <input id="light" type="checkbox" onclick="flipLight()">
