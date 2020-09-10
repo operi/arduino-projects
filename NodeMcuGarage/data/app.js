@@ -18,9 +18,9 @@ ws.onmessage = function(e) {
 function flipPump() {
     console.log("Flipping pump");
     ws.send("pump");
-}
+};
 
 function flipLight() {
     console.log("Flipping LIGHT");
     ws.send("light");
-}
+};
