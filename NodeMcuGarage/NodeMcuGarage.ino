@@ -15,7 +15,7 @@ WebSocketsServer webSocket(81);
 IPAddress ip(192, 168, 0, 200);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
-int stopPumpAt = 0;
+unsigned long stopPumpAt = 0;
 
 
 // use custom values. See https://github.com/nodemcu/nodemcu-devkit-v1.0/issues/16#issuecomment-244625860
