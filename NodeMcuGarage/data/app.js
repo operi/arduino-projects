@@ -24,3 +24,7 @@ function flipLight() {
     console.log("Flipping LIGHT");
     ws.send("light");
 }
+
+window.setInterval(function(){
+    ws.send("status");
+  }, 60000);
