@@ -11,6 +11,7 @@ void handlePump() {
   } else {
     stopPumpAt = 0;
   }
+  sendStatus();
 }
 
 bool shouldTurnPumpOff() {
