@@ -10,8 +10,11 @@ ws.onmessage = function(e) {
   if (response.pump.state) {
     var stopAtDate = new Date(Date.now() + (response.pump.stopPumpAt - response.now));
     var message = "Turns off at " + stopAtDate.toLocaleTimeString('en-US');
-    document.getElementById("pumpOffAtText").style.display = "inline-flexbox";
+    document.getElementById("pumpOffAtText").style.display = "initial";
     document.getElementById("pumpOffAtMessage").textContent = message;
+   } else {
+        document.getElementById("pumpOffAtText").style.display = "none";
+
    }
 };
 
