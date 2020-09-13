@@ -7,11 +7,14 @@
 #define ARDUINOJSON_USE_LONG_LONG 1
 #include <ArduinoJson.h>
 #include <FS.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 #include "Keys.h"
 
 File fsUploadFile;
 ESP8266WebServer server(80);
 WebSocketsServer webSocket(81);
+IPAddress dns(1, 1, 1, 1);
 IPAddress ip(192, 168, 0, 200);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
@@ -24,6 +27,10 @@ const int OFF = !LOW;
 
 const int pinPump = 5;
 const int pinLight = 4;
+
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org");
+
 
 void setup(void) {
   Serial.begin(115200);
@@ -46,6 +53,8 @@ void setup(void) {
   setupServer();
 
   setupWS();
+
+  timeClient.begin();
 }
 
 void loop(void) {
@@ -56,4 +65,6 @@ void loop(void) {
   if (shouldTurnPumpOff()) {
     handlePump();
   }
+
+  timeClient.update();
 }

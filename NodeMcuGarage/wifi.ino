@@ -1,5 +1,5 @@
 void setupWIFI() {
-  WiFi.config(ip, gateway, subnet);
+  WiFi.config(ip, dns, gateway, subnet);
   WiFi.begin(ssid1, password1);
 
 
