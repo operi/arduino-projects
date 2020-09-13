@@ -1,4 +1,4 @@
-long halfHour = 1800000;
+long pumpRunTime = 30 * 60;
 
 bool getPumpState() {
   return digitalRead(pinPump);
@@ -7,7 +7,7 @@ bool getPumpState() {
 void handlePump() {
   digitalWrite(pinPump, !getPumpState());
   if (getPumpState() == ON) {
-    stopPumpAt = millis() + halfHour;
+    stopPumpAt = timeClient.getEpochTime() + pumpRunTime;
   } else {
     stopPumpAt = 0;
   }
@@ -15,5 +15,5 @@ void handlePump() {
 }
 
 bool shouldTurnPumpOff() {
-  return stopPumpAt > 0 and stopPumpAt < millis();
+  return stopPumpAt > 0 and stopPumpAt < timeClient.getEpochTime();
 }

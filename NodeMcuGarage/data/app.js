@@ -8,7 +8,7 @@ ws.onmessage = function(e) {
   document.getElementById("pump").checked = response.pump.state;
   document.getElementById("light").checked = response.light.state;
   if (response.pump.state) {
-    var stopAtDate = new Date(Date.now() + (response.pump.stopPumpAt - response.now));
+    var stopAtDate = new Date(response.pump.stopPumpAt * 1000);
     var message = "Turns off at " + stopAtDate.toLocaleTimeString('en-US');
     document.getElementById("pumpOffAtText").style.display = "initial";
     document.getElementById("pumpOffAtMessage").textContent = message;
