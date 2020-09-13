@@ -2,6 +2,10 @@ const ws = new WebSocket('ws://192.168.0.200:81/');
 ws.onopen = function() {
     console.log('WebSocket Client Connected');
 };
+ws.onerror = function(event) {
+    window.alert("Error connecting WebSocket client");
+    console.log(event);
+}
 ws.onmessage = function(e) {
   console.log("Received: '" + e.data + "'");
   var response = JSON.parse(e.data);
