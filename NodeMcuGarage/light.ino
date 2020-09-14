@@ -4,5 +4,5 @@ bool getLightState() {
 
 void handleLight() {
   digitalWrite(pinLight, !getLightState());
-  sendStatus();
+  broadcastStatus();
 }
