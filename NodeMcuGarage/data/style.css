@@ -11,6 +11,7 @@ body {
     justify-content: center;
     flex-direction: column;
 }
+
 .container {
     margin: 25% auto;
 }
@@ -19,7 +20,7 @@ body {
     margin: 10% auto;
 }
 
-.contianer .form { 
+.container .form {
     margin: 3rem;
     width: 50%;
 }
